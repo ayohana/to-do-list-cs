@@ -15,3 +15,5 @@ C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\obj\Debug\
 C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\obj\Debug\netcoreapp2.2\ToDoList.Tests.csproj.CopyComplete
 C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\obj\Debug\netcoreapp2.2\ToDoList.Tests.dll
 C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\obj\Debug\netcoreapp2.2\ToDoList.Tests.pdb
+C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\bin\Debug\netcoreapp2.2\ToDoList.Views.dll
+C:\Users\Adela\Desktop\to-do-list-cs\ToDoList.Solution\ToDoList.Tests\bin\Debug\netcoreapp2.2\ToDoList.Views.pdb
