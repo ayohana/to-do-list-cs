@@ -1,8 +1,11 @@
 @* When a form is being used to create a new object, it must have a post method *@
 @* We use a POST method because the user will change something on the site's server therefore the user needs to send a POST request. *@
 
-<form action="/items" method="post">
-  <label for="description">Add a new item</label>
-  <input id="description" name="description" type="text">
-  <button type="submit">Submit</button>
+<h1>Add a new item to @Model.Name</h1>
+
+<form action="/categories/@Model.Id/items" method="post">
+  <input id="categoryId" name="categoryId" type="hidden" value="@Model.Id">
+  <label for="itemDescription">Item Description</label>
+  <input id="itemDescription" name="itemDescription" type="text">
+  <button type='submit'>Add Item</button>
 </form>
