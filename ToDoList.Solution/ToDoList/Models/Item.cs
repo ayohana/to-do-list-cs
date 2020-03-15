@@ -47,7 +47,7 @@ namespace ToDoList.Models
       description.ParameterName = "@ItemDescription";
       description.Value = this.Description;
       cmd.Parameters.Add(description);    
-      cmd.ExecuteNonQuery();
+      cmd.ExecuteNonQuery(); // ExecuteNonQuery() does not return results so it's appropriate to use here
       Id = (int) cmd.LastInsertedId; // Use an explicit type casting here from LONG to INT type. Database stores unique IDs in LONG 64-bit data type instead of 32-bit INT
 
       // End new code
@@ -99,9 +99,38 @@ namespace ToDoList.Models
 
     public static Item Find(int searchId)
     {
-      // Temporarily returning placeholder item to get beyond compiler errors until we refactor to work with database.
-      Item placeholderItem = new Item("placeholder item");
-      return placeholderItem;
+      // We open a connection.
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      // We create MySqlCommand object and add a query to its CommandText property. We always need to do this to make a SQL query.
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT * FROM `items` WHERE id = @thisId;";
+
+      // We have to use parameter placeholders (@thisId) and a `MySqlParameter` object to prevent SQL injection attacks. This is only necessary when we are passing parameters into a query. We also did this with our Save() method.
+      MySqlParameter thisId = new MySqlParameter();
+      thisId.ParameterName = "@thisId";
+      thisId.Value = searchId;
+      cmd.Parameters.Add(thisId);
+
+      // We use the ExecuteReader() method because our query will be returning results and we need this method to read these results. This is in contrast to the ExecuteNonQuery() method, which we use for SQL commands that don't return results like our Save() method.
+      var rdr = cmd.ExecuteReader() as MySqlDataReader;
+      int itemId = 0; // default value in case the ExecuteReader() method does not return results
+      string itemDescription = ""; // default value in case the ExecuteReader() method does not return results
+      while (rdr.Read())
+      {
+        itemId = rdr.GetInt32(0);
+        itemDescription = rdr.GetString(1);
+      }
+      Item foundItem= new Item(itemDescription, itemId);
+
+      // We close the connection.
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+      return foundItem;
     }
 
   }
