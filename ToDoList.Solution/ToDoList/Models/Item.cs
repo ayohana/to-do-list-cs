@@ -6,7 +6,7 @@ namespace ToDoList.Models
   public class Item
   {
     public string Description { get; set; }
-    public int Id { get; }
+    public int Id { get; set; }
 
     public Item (string description)
     {
@@ -30,6 +30,31 @@ namespace ToDoList.Models
         Item newItem = (Item) otherItem;
         bool descriptionEquality = (this.Description == newItem.Description);
         return descriptionEquality;
+      }
+    }
+
+    public void Save()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+
+      // Begin new code
+
+      cmd.CommandText = @"INSERT INTO items (description) VALUES (@ItemDescription);";
+      MySqlParameter description = new MySqlParameter();
+      description.ParameterName = "@ItemDescription";
+      description.Value = this.Description;
+      cmd.Parameters.Add(description);    
+      cmd.ExecuteNonQuery();
+      Id = (int) cmd.LastInsertedId; // Use an explicit type casting here from LONG to INT type. Database stores unique IDs in LONG 64-bit data type instead of 32-bit INT
+
+      // End new code
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
       }
     }
 
