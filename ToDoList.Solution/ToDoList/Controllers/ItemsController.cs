@@ -19,5 +19,18 @@ namespace ToDoList.Controllers
       List<Item> model = _db.Items.ToList(); // ToList() will give us access to all our Items in List
       return View(model);
     }
+
+    public ActionResult Create()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public ActionResult Create(Item item)
+    {
+      _db.Items.Add(item);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
   }
 }
