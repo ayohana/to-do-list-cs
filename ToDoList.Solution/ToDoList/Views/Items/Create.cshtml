@@ -1,0 +1,17 @@
+@{
+  Layout = "_Layout";
+}
+
+@model ToDoList.Models.Item
+@* The line above is a model directive - tells our view what type of data will be passed into the view from the controller route *@
+
+<h4>Add a new task</h4>
+@using (Html.BeginForm())
+{
+  @Html.LabelFor(model => model.Description)
+  @Html.TextBoxFor(model => model.Description)
+  <input type="submit" value="Add new task" />
+}
+<p>@Html.ActionLink("Show all items", "Index")</p>
+
+@* By default, BeginForm() sends an HTTP POST request to the current URL. This form will send a POST request to the Create() route. In HTML, it would look like this: <form action="/Items/Create" method="post"> *@
