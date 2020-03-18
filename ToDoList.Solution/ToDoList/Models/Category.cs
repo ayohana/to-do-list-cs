@@ -4,38 +4,18 @@ namespace ToDoList.Models
 {
   public class Category
   {
-    private static List<Category> _instances = new List<Category> {};
+    public Category()
+    {
+      this.Items = new HashSet<Item>();
+    }
+    // A HashSet is an unordered collection of unique elements. We create a HashSet of Items in the constructor to help avoid exceptions when no records exist in the "many" side of the relationship.
+
+    public int CategoryId { get; set; }
     public string Name { get; set; }
-    public int Id { get; }
-    public List<Item> Items { get; set; }
-
-    public Category(string categoryName)
-    {
-      Name = categoryName;
-      _instances.Add(this);
-      Id = _instances.Count;
-      Items = new List<Item>{};
-    }
-
-    public static void ClearAll()
-    {
-      _instances.Clear();
-    }
-
-    public static List<Category> GetAll()
-    {
-      return _instances;
-    }
-
-    public static Category Find(int searchId)
-    {
-      return _instances[searchId-1];
-    }
-
-    public void AddItem(Item item)
-    {
-      Items.Add(item);
-    }
-
+    public virtual ICollection<Item> Items { get; set; }
+    // Declaring Items as an instance of ICollection, a generic interface built into the .NET Framework.
+    // An interface is a collection of method signatures bundled together. Interfaces are often likened to "contracts" the developer "signs" because whenever a class extends an interface, it must include every method outlined in the interface.
+    // ICollection is specifically a generic interface, which means it contains a bundle of different menthods meant to work on a generic collection.
+    // We use ICollection specifically because EF requires it. ICollection outlines methods for querying and changing data, which is functionality EF needs to work the "ORM magic" preventing us from having to manually interact with our database like we do when using SQL directly. 
   }
 }

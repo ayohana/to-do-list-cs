@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore; // to access Entity State
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ToDoList.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,16 @@ namespace ToDoList.Controllers
 
     public ActionResult Index()
     {
-      List<Item> model = _db.Items.ToList(); // ToList() will give us access to all our Items in List
+      List<Item> model = _db.Items.Include(items => items.Category).ToList();
       return View(model);
     }
+    // Using eager loading here, meaning that all info related to an object should be loaded by using Include()
+    // This basically states: for each Item in the database, include the Category it belongs to and then put all the Items into list
+    // We use eager loading instead of lazy loading because each item has only one category so there is a minimal amount of additional loading happening when we get information about an item
 
     public ActionResult Create()
     {
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
       return View();
     }
 
@@ -44,6 +49,7 @@ namespace ToDoList.Controllers
     public ActionResult Edit(int id)
     {
       var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
       return View(thisItem);
     }
 
