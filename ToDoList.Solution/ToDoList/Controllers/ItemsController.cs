@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore; // to access Entity State
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Models;
 using System.Collections.Generic;
@@ -38,6 +39,20 @@ namespace ToDoList.Controllers
       Item thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
       // FirstOrDefault() uses a lambda. We can read this as: start by looking at db.Items (our items table), then find any items where the ItemId of an item is equal to the id we've passed into this method.
       return View(thisItem);
+    }
+
+    public ActionResult Edit(int id)
+    {
+      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      return View(thisItem);
+    }
+
+    [HttpPost]
+    public ActionResult Edit(Item item)
+    {
+      _db.Entry(item).State = EntityState.Modified; // updates item's State property to EntityState.Modified so that Entity knows that the entry has been modified
+      _db.SaveChanges(); // ask the database to save the changes
+      return RedirectToAction("Index");
     }
   }
 }
