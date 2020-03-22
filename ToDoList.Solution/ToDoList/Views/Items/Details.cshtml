@@ -1,4 +1,4 @@
-@* @{
+@{
   Layout = "_Layout";
 }
 
@@ -7,7 +7,25 @@
 <h2>Item Details</h2>
 <hr />
 <h3>@Html.DisplayNameFor(model => model.Description): @Html.DisplayFor(model => model.Description)<h3>
-  @* DisplayNameFor() displays property name while DisplayFor() displays the value of that property. *@
-@* <p>@Html.ActionLink("Edit Item", "Edit", new { id = Model.ItemId })</p>
+
+@* DisplayNameFor() displays property name while DisplayFor() displays the value of that property. *@
+
+@if(@Model.Categories.Count == 0)
+{
+  <p>This item does not belong to any categories</p>
+}
+else
+{
+  <h4>Categories the item belongs to:</h4>
+  <ul>
+  @foreach(var join in Model.Categories)
+  {
+    <li>@join.Category.Name</li>
+  }
+  </ul>
+}
+@* Note that the model's Categories property now holds the list of associated categories (CategoryItem). We call the variable join to specify that we are accessing those categories via the join class. *@
+
+<p>@Html.ActionLink("Edit Item", "Edit", new { id = Model.ItemId })</p>
 <p>@Html.ActionLink("Delete Item", "Delete", new { id = Model.ItemId })</p>
-<p>@Html.ActionLink("Back to list", "Index")</p> *@
+<p>@Html.ActionLink("Back to list", "Index")</p>
