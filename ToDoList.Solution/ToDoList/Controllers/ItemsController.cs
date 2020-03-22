@@ -123,21 +123,30 @@ namespace ToDoList.Controllers
     //   return RedirectToAction("Index");
     // }
 
-    // One-to-many relationship code:
-    // public ActionResult Delete(int id)
-    // {
-    //   var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-    //   return View(thisItem);
-    // }
+    public ActionResult Delete(int id)
+    {
+      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      return View(thisItem);
+    }
 
-    // One-to-many relationship code:
-    // [HttpPost, ActionName("Delete")]
-    // public ActionResult DeleteConfirmed(int id)
-    // {
-    //   var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-    //   _db.Items.Remove(thisItem);
-    //   _db.SaveChanges();
-    //   return RedirectToAction("Index");
-    // }
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed(int id)
+    {
+      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      _db.Items.Remove(thisItem);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public ActionResult DeleteCategory(int joinId)
+    {
+      var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
+      _db.CategoryItem.Remove(joinEntry);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+    // We use the name joinId in the DeleteCategory() route instead of id becuase .NET automatically utilizes the value in the URL query if we name the variable id. For example, if we named the parameter id instead of joinId and the details URL was something like /Items/Details/6, then the value of id would be 6, which is the ItemId and not the CategoryItemId that we wanted from our Hidden() method.
+    // The reason .NET uses this convention is due to our configuration in the Startup.cs file. 
   }
 }

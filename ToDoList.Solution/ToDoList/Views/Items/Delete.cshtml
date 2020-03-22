@@ -1,14 +1,17 @@
-@* @{
+@{
   Layout = "_Layout";
 }
 
 @model ToDoList.Models.Item
 
-<h2>Are you sure you want to delete this?</h2>
+<h2>Are you sure you want to delete this Item?</h2>
 
 @Html.DisplayNameFor(model => model.Description): @Html.DisplayFor(model => model.Description)
 @using (Html.BeginForm())
 {
   <input type="submit" value="Delete" />
 }
-@Html.ActionLink("Back to List", "Index") *@
+
+@* Utilizing a concept called CASCADE DELETE, EF Core will automatically remove entries in the join table when we delete an entity. Say we have an Item with description "Do the dishes" and we add it to a Category named "Kitchen", thus creating an entry in the join table. If we were to delete either the item or the category, the corresponding entry in the CategoryItem join table will also be deleted since the ItemId or CategoryId of the deleted item or category no longer exists. *@
+
+@Html.ActionLink("Back to List", "Index")

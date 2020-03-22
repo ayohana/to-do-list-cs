@@ -39,6 +39,7 @@ namespace ToDoList
         routes.MapRoute(
           name: "default",
           template: "{controller=Home}/{action=Index}/{id?}");
+          // The template option tells .NET how to treat routes. This configuration, known as conventional routing, matches a path like /Items/Details/6 to its specific controller action by looking for the Details action route in the Items controller. Then it binds the value of id to 6. We won't change routes in this class, but be aware that .NET routing conventions can be configured.
       });
 
       app.Run(async (context) =>
