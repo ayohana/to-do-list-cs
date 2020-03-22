@@ -9,7 +9,7 @@ namespace ToDoList.Models
     // The virtual modifier cannot be used with static, abstract, or private modifier. In the code above, Categories is public so it can be virtual.
     // Making a property virtual allows Entity Framework (EF) to use lazy loading. Lazy loading just means that EF will only retrieve information that our code explicitly requires. This is considered to be far more efficient.
     public DbSet<Item> Items { get; set; }
-
+    public DbSet<CategoryItem> CategoryItem { get; set; } // represents our JOIN table
     public ToDoListContext(DbContextOptions options) : base(options) { }
   }
 }

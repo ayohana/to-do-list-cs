@@ -1,4 +1,4 @@
-@{
+@* @{
   Layout = "_Layout";
 }
 
@@ -13,7 +13,7 @@
     @Html.HiddenFor(model => model.ItemId)
     @* So that we can pass the item's specific ID to our Controller *@
 
-    @Html.LabelFor(model => model.Description)
+    @* @Html.LabelFor(model => model.Description)
     @Html.EditorFor(model => model.Description)
 
     @Html.LabelFor(model => model.Category)
@@ -21,4 +21,4 @@
 
     <input type="submit" value="Save" />
 }
-<p>@Html.ActionLink("Back to list", "Index")</p>
+<p>@Html.ActionLink("Back to list", "Index")</p> *@

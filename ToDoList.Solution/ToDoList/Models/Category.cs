@@ -6,13 +6,13 @@ namespace ToDoList.Models
   {
     public Category()
     {
-      this.Items = new HashSet<Item>();
+      this.Items = new HashSet<CategoryItem>();
     }
-    // A HashSet is an unordered collection of unique elements. We create a HashSet of Items in the constructor to help avoid exceptions when no records exist in the "many" side of the relationship.
+    // A HashSet is an unordered collection of unique elements. We create a HashSet of CategoryItems in the constructor to help avoid exceptions when no records exist in the "many" side of the relationship.
 
     public int CategoryId { get; set; }
     public string Name { get; set; }
-    public virtual ICollection<Item> Items { get; set; }
+    public ICollection<CategoryItem> Items { get; set; }
     // Declaring Items as an instance of ICollection, a generic interface built into the .NET Framework.
     // An interface is a collection of method signatures bundled together. Interfaces are often likened to "contracts" the developer "signs" because whenever a class extends an interface, it must include every method outlined in the interface.
     // ICollection is specifically a generic interface, which means it contains a bundle of different menthods meant to work on a generic collection.
