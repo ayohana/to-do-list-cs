@@ -1,21 +1,22 @@
-@* @{
+@{
   Layout = "_Layout";
 }
 
 @model ToDoList.Models.Item
 @* The line above is a model directive - tells our view what type of data will be passed into the view from the controller route *@
 
-@* <h4>Add a new task</h4>
+<h4>Add a new task</h4>
 @using (Html.BeginForm())
 {
   @Html.LabelFor(model => model.Description)
   @Html.TextBoxFor(model => model.Description)
 
-  @Html.LabelFor(model => model.Category)
+  @Html.Label("Select category")
   @Html.DropDownList("CategoryId")
+  @* DropDownList() to create an HTML dropdown menu consisting of a select element with nested option elements. The user will see a Category's name for each option while the actual value of the option will be the CategoryId because of the SelectList() we created in the controller method. *@
 
   <input type="submit" value="Add new item" class="btn btn-default" />
 }
 <p>@Html.ActionLink("Show all items", "Index")</p>
 
-By default, BeginForm() sends an HTTP POST request to the current URL. This form will send a POST request to the Create() route. In HTML, it would look like this: <form action="/Items/Create" method="post"> *@
+@* By default, BeginForm() sends an HTTP POST request to the current URL. This form will send a POST request to the Create() route. In HTML, it would look like this: <form action="/Items/Create" method="post"> *@
