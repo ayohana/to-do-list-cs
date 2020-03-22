@@ -1,4 +1,4 @@
-@* @{
+@{
   Layout = "_Layout";
 }
 
@@ -9,18 +9,22 @@
 <hr />
 <h3>@Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)</h3>
 
-<ul>
 @if (@Model.Items.Count == 0)
 {
-  <p>no items found</p>
+  <p>This category does not contain any items.</p>
 }
-
-@foreach (Item item in @Model.Items)
+else
 {
-  <li>Description: @item.Description</li>
+  <h4>Items the category contains:</h4>
+  <ul>
+    @foreach (var join in @Model.Items)
+    {
+      <li>@join.Item.Description</li>
+    }
+  </ul>
 }
-</ul>
+@* Note that the model's Items property now holds the list of associated items (CategoryItem). We call the variable join to specify that we are accessing those items via the join class. *@
 
 <p>@Html.ActionLink("Back to categories", "Index")</p>
 <p>@Html.ActionLink("Edit Category", "Edit", new { id = Model.CategoryId })</p>
-<p>@Html.ActionLink("Delete Category", "Delete", new { id = Model.CategoryId })</p> *@
+<p>@Html.ActionLink("Delete Category", "Delete", new { id = Model.CategoryId })</p>

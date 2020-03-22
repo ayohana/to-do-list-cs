@@ -16,6 +16,8 @@ namespace ToDoList.Controllers
       _db = db;
     }
 
+    // All functionalities for many-to-many relationships are only added in the ItemsController because this will fulfill both sides of the many-to-many relationship. An item will be able to have many categories and vice versa.
+
     public ActionResult Index()
     {
       return View(_db.Items.ToList());
@@ -76,13 +78,43 @@ namespace ToDoList.Controllers
     //   return RedirectToAction("Index");
     // }
 
-    // public ActionResult Edit(int id)
-    // {
-    //   var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-    //   ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-    //   return View(thisItem);
-    // }
+    public ActionResult Edit(int id)
+    {
+      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      return View(thisItem);
+    }
 
+    [HttpPost]
+    public ActionResult Edit(Item item, int CategoryId)
+    {
+      if (CategoryId != 0)
+      {
+        _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+      }
+      _db.Entry(item).State = EntityState.Modified;
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    public ActionResult AddCategory(int id)
+    {
+      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
+      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      return View(thisItem);
+    }
+
+    [HttpPost]
+    public ActionResult AddCategory(Item item, int CategoryId)
+    {
+      if (CategoryId != 0)
+      {
+        _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+    // One-to-many relationship code:
     // [HttpPost]
     // public ActionResult Edit(Item item)
     // {
@@ -91,12 +123,14 @@ namespace ToDoList.Controllers
     //   return RedirectToAction("Index");
     // }
 
+    // One-to-many relationship code:
     // public ActionResult Delete(int id)
     // {
     //   var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
     //   return View(thisItem);
     // }
 
+    // One-to-many relationship code:
     // [HttpPost, ActionName("Delete")]
     // public ActionResult DeleteConfirmed(int id)
     // {
