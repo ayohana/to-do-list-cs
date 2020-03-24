@@ -21,8 +21,8 @@ else
   @foreach(var join in Model.Categories)
   {
     <li>@join.Category.Name</li>
-    @using (Html.BeginForm("DeleteCategory", "Items"))
     @* We pass in two aruguments to our BeginForm() method. The first argument is the route method that we'd like to invoke and the second argument is the controller (Note that .NET appends "Controller" to whatever string you pass in). *@
+    @using (Html.BeginForm("DeleteCategory", "Items"))
     {
       @Html.Hidden("joinId", @join.CategoryItemId)
       @* We also pass through a Hidden() method with two arguments. The first argument is the name of the route parameter variable we'd like to pass and the second is the actual value of that parameter. In this case, since we want to delete the CategoryItem entry, we'll pass through the CategoryItemId that we have access to as a variable called joinId. *@

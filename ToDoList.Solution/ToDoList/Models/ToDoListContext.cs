@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+// Identity is built to use Entity Framework and store user information in a database. It comes with the class IdentityDbContext, which extends Entity Framework's DbContext class to work with user authentication.
 
 namespace ToDoList.Models
 {
-  public class ToDoListContext : DbContext
+  public class ToDoListContext : IdentityDbContext<ApplicationUser>
   {
     public virtual DbSet<Category> Categories { get; set; }
     // Declaring something as virtual tells our application that we reserve the right to override it. By default, all methods are NOT virtual, which means they can't be overridden.

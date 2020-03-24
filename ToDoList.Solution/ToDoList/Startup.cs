@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using ToDoList.Models;
 
 namespace ToDoList
@@ -23,9 +24,14 @@ namespace ToDoList
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddMvc();
+
       services.AddEntityFrameworkMySql()
         .AddDbContext<ToDoListContext>(options => options
         .UseMySql(Configuration["ConnectionStrings:DefaultConnection"]));
+
+      services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<ToDoListContext>()
+        .AddDefaultTokenProviders();
     }
 
     public void Configure(IApplicationBuilder app)
@@ -33,6 +39,8 @@ namespace ToDoList
       app.UseStaticFiles();
       
       app.UseDeveloperExceptionPage();
+
+      app.UseAuthentication(); // must be before app.UseMvc() or users will not be able to log in correctly and the app will give you a white screen
 
       app.UseMvc(routes =>
       {
