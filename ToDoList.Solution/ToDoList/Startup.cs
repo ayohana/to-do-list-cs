@@ -32,6 +32,18 @@ namespace ToDoList
       services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<ToDoListContext>()
         .AddDefaultTokenProviders();
+
+      // Overriding Default User Requirements:
+      services.Configure<IdentityOptions>(options =>
+      {
+        options.Password.RequireDigit = false;
+        options.Password.RequiredLength = 0;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredUniqueChars = 0;
+      });
+      // The configuration above allows us to input a password of a single character to create a new user. Even though the RequiredLength property is 0, we can't actually put in an empty password because our application will throw an ArgumentNullException: Value cannot be null error otherwise. It should be obvious that the settings above should never be used in a production environment. However, it makes our lives easier during development.
     }
 
     public void Configure(IApplicationBuilder app)
