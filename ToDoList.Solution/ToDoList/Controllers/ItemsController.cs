@@ -1,27 +1,41 @@
-using Microsoft.EntityFrameworkCore; // to access Entity State
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization; // allow us to actually authorize users.
+using Microsoft.AspNetCore.Identity; // so our controller can interact with users from the database.
+using System.Threading.Tasks; // so we can call async methods.
+using System.Security.Claims; // so we can use claim based authorization. A claim is a form of user identification.
 using ToDoList.Models;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ToDoList.Controllers
 {
+  [Authorize] // allows access to ItemsController only if a user is logged in
   public class ItemsController : Controller
   {
     private readonly ToDoListContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ItemsController(ToDoListContext db)
+    public ItemsController(UserManager<ApplicationUser> userManager, ToDoListContext db)
     {
+      _userManager = userManager;
       _db = db;
     }
 
-    // All functionalities for many-to-many relationships are only added in the ItemsController because this will fulfill both sides of the many-to-many relationship. An item will be able to have many categories and vice versa.
-
-    public ActionResult Index()
+    public async Task<ActionResult> Index()
     {
-      return View(_db.Items.ToList());
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // this refers to the ItemsController itself. FindFirst() is a method that locates the first record that meets the provided criteria. This method takes ClaimTypes.NameIdentifier as an argument. This is why we need a using directive for System.Security.Claims. We specify ClaimTypes.NameIdentifier to locate the unique ID associated with the current account. NameIdentifier is a property that refers to an Entity's unique ID. Finally, we include the ? operator called an existential operator. It states that we should only call the method to the right of the ? if the method to the left of the ? doesn't return null.
+      var currentUser = await _userManager.FindByIdAsync(userId); // We call the FindByIdAsync() method, which, as its name suggests, is a built-in Identity method used to find a user's account by their unique ID.
+      var userItems = _db.Items.Where(entry => entry.User.Id == currentUser.Id); // We use the Where() method, which is a LINQ method we can use to query a collection in a way that echoes the logic of SQL. We can use Where() to make many different kinds of queries, as the method accepts an expression to filter our results. In this case, we're simply asking Entity to find items in the database where the user id associated with the item is the same id as the id that belongs to the currentUser. This ensures users only see their own tasks in the view.
+      return View(userItems);
     }
+
+    // Many-to-many relationship code:
+    // public ActionResult Index()
+    // {
+    //   return View(_db.Items.ToList());
+    // }
 
     // One-to-many relationship code:
     //     public ActionResult Index()
@@ -57,17 +71,33 @@ namespace ToDoList.Controllers
     }
 
     [HttpPost]
-    public ActionResult Create(Item item, int CategoryId)
+    public async Task<ActionResult> Create(Item item, int CategoryId)
     {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      item.User = currentUser;
       _db.Items.Add(item);
-      if (CategoryId != 0) // we add this condition to handle cases where a CategoryId doesn't get passed in to the route (such as when there are no Categories)
+      if (CategoryId != 0)
       {
         _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
-        // this creates the association between the newly created Item and a Category. Because the Item has been added and a new ItemId has been assigned, we can create a new CategoryItem join entity. This combines the ItemId with the CategoryId specified in the dropdown menu and passed in through our route's parameters.
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+    // Many-to-many relationship code:
+    // [HttpPost]
+    // public ActionResult Create(Item item, int CategoryId)
+    // {
+    //   _db.Items.Add(item);
+    //   if (CategoryId != 0) // we add this condition to handle cases where a CategoryId doesn't get passed in to the route (such as when there are no Categories)
+    //   {
+    //     _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+    //     // this creates the association between the newly created Item and a Category. Because the Item has been added and a new ItemId has been assigned, we can create a new CategoryItem join entity. This combines the ItemId with the CategoryId specified in the dropdown menu and passed in through our route's parameters.
+    //   }
+    //   _db.SaveChanges();
+    //   return RedirectToAction("Index");
+    // }
 
     // One-to-many relationship code:
     // [HttpPost]
