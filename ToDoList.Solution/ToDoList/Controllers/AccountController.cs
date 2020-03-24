@@ -47,9 +47,37 @@ namespace ToDoList.Controllers
         return View();
       }
     }
-
     //Note that CreateAsync() takes two arguments:
     // 1. An ApplicationUser with user information;
     // 2. A password that will be encrypted when the user is added to the database.
+
+    public ActionResult Login()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Login(LoginViewModel model)
+    {
+      Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
+      if (result.Succeeded)
+      {
+        return RedirectToAction("Index");
+      }
+      else
+      {
+        return View();
+      }
+    }
+    //Remember that we've injected a SignInManager service, which is being referenced in the signInManager variable. The SignInManager class includes the PasswordSignInAsync() method, which has a self-explanatory name: it's an async method that allows users to sign in with a password.
+    // PasswordSignInAsync() takes four parameters: userName, password, isPersistent and lockoutOnFailure. For now we're only handling username and password, so we set explicit boolean values for isPersistent and lockoutOnFailure.
+
+    [HttpPost]
+    public async Task<ActionResult> LogOff()
+    {
+      await _signInManager.SignOutAsync();
+      return RedirectToAction("Index");
+    }
+
   }
 }
